@@ -1,5 +1,6 @@
 package com.rombsquare.quiz.editorscreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -17,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.rombsquare.quiz.InputDialog
 import com.rombsquare.quiz.db.CardEntity
@@ -28,6 +30,8 @@ import com.rombsquare.quiz.filescreen.PlusFab
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardViewModel, fileViewModel: FileViewModel) {
+    val context = LocalContext.current
+
     var showCreateCardDialog by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
     var showRenameDialog by remember {mutableStateOf(false)}
@@ -123,6 +127,11 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
                 title = "Rename",
                 label = "New name",
                 onConfirm = {
+                    if (it.isEmpty()) {
+                        Toast.makeText(context, "Enter a new file name", Toast.LENGTH_SHORT).show()
+                        return@InputDialog
+                    }
+
                     fileViewModel.set(FileEntity(
                         id = fileId,
                         name = it

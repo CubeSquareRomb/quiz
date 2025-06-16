@@ -62,6 +62,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation("androidx.navigation:navigation-compose:2.9.0")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
 //    implementation("com.google.dagger:hilt-android:2.51")
 //    kapt("com.google.dagger:hilt-compiler:2.51")
 //    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")

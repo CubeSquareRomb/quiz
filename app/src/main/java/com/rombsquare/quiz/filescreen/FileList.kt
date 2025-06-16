@@ -1,6 +1,7 @@
 package com.rombsquare.quiz.filescreen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.rombsquare.quiz.db.FileEntity
 import com.rombsquare.quiz.db.FileViewModel
 
@@ -30,28 +33,33 @@ fun FileList(
     }
 
     if (files.isEmpty()) {
-        Text("No files yet")
-    } else {
-        LazyColumn(
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "No files yet",
+                fontSize = 20.sp
+            )
+        }
+        return
+    }
+
+    LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
                 .padding(horizontal = 8.dp, vertical = 12.dp)
-        ) {
+    ) {
             itemsIndexed(files) { index, file ->
-                Text(
-                    text = file.name,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onFileClick(file) }
-                        .padding(vertical = 28.dp, horizontal = 8.dp),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha=0.5f))
+                FileItem(file) {
+                    onFileClick(file)
+                }
 
-                if (index < files.lastIndex) {
+                if (index == files.lastIndex) {
                     HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha=0.5f))
                 }
             }
-        }
     }
 }

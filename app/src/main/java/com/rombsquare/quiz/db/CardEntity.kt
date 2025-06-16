@@ -22,8 +22,8 @@ data class CardEntity(
     val side1: String,
     val side2: String,
     val fileId: Int,
-    val fixedOptions: Boolean,
-    val incorrectOption1: String,
-    val incorrectOption2: String,
-    val incorrectOption3: String,
+    val fixedOptions: Boolean = false,
+    val incorrectOption1: String = "",
+    val incorrectOption2: String = "",
+    val incorrectOption3: String = "",
 )

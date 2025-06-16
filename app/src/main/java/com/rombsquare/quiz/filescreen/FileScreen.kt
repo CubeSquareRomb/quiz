@@ -79,9 +79,3 @@ fun FileScreen(cardViewModel: CardViewModel, viewModel: FileViewModel, navContro
     }
 
 }
-
-@Composable
-fun Toast(message: String) {
-    val context = LocalContext.current
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}

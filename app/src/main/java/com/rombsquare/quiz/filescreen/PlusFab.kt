@@ -17,7 +17,7 @@ fun PlusFab(onClick: () -> Unit) {
         Icon(
             imageVector = Icons.Filled.Add,
             contentDescription = "Add",
-            tint = Color.White,
+            tint = MaterialTheme.colorScheme.onPrimary,
         )
     }
 }

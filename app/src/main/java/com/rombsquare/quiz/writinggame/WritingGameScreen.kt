@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -83,7 +84,10 @@ fun WritingGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int,
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text(if (lvl in cards.indices) cards[lvl].side1 else "???")
+            Text(
+                if (lvl in cards.indices) cards[lvl].side1 else "???",
+                textAlign = TextAlign.Center,
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))

@@ -1,5 +1,7 @@
 package com.rombsquare.quiz.optiongame
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +10,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +32,12 @@ import androidx.navigation.NavController
 import com.rombsquare.quiz.GameViewModel
 import com.rombsquare.quiz.GameViewModelFactory
 import com.rombsquare.quiz.db.CardViewModel
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun OptionGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int, navController: NavController) {
@@ -79,38 +92,49 @@ fun OptionGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int, 
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text(if (lvl in cards.indices) cards[lvl].side1 else "???")
+            Text(
+                if (lvl in cards.indices) cards[lvl].side1 else "???",
+                textAlign = TextAlign.Center,
+                )
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             itemsIndexed(options) { i, optionIndex ->
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(60.dp)
-                    ,
-                    onClick = {
-                        gameViewModel.next(i)
-                }) {
-                    var text: String
-                    if (cards[lvl].fixedOptions) {
-                        text = when (optionIndex) {
+                        .heightIn(min = 90.dp)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor  = Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    onClick = { gameViewModel.next(i) }
+                ) {
+                    val text = if (cards[lvl].fixedOptions) {
+                        when (optionIndex) {
                             1 -> cards[lvl].incorrectOption1
                             2 -> cards[lvl].incorrectOption2
                             3 -> cards[lvl].incorrectOption3
                             else -> cards[lvl].side2
                         }
                     } else {
-                        text = cards[optionIndex].side2
+                        cards[optionIndex].side2
                     }
 
                     Text(text)
-
                 }
-                Spacer(
-                    modifier = Modifier.height(4.dp)
-                )
             }
         }
     }

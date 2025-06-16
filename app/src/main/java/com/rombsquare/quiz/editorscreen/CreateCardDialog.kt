@@ -1,5 +1,6 @@
 package com.rombsquare.quiz.editorscreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -13,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -20,6 +22,8 @@ fun CreateCardDialog(
     onDismiss: () -> Unit,
     onConfirm: (String, String) -> Unit
 ) {
+    val context = LocalContext.current
+
     var side1 by remember { mutableStateOf("") }
     var side2 by remember { mutableStateOf("") }
 
@@ -30,19 +34,35 @@ fun CreateCardDialog(
             Column {
                 OutlinedTextField(
                     value = side1,
-                    onValueChange = { side1 = it },
-                    label = { Text("Question: ") }
+                    onValueChange = {
+                        side1 = it
+                    },
+                    label = { Text("Question") },
+                    singleLine = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = side2,
-                    onValueChange = { side2 = it },
-                    label = { Text("Answer: ") }
+                    onValueChange = {
+                        side2 = it
+                    },
+                    label = { Text("Answer") },
+                    singleLine = true
                 )
             }
         },
         confirmButton = {
             TextButton(onClick = {
+                if (side1.isEmpty() || side2.isEmpty()) {
+                    Toast.makeText(context, "Some fields are empty", Toast.LENGTH_SHORT).show()
+                    return@TextButton
+                }
+
+                if (side1.length > 50 || side2.length > 25) {
+                    Toast.makeText(context, "Some of fields are too long", Toast.LENGTH_SHORT).show()
+                    return@TextButton
+                }
+
                 onConfirm(side1, side2)
             }) {
                 Text("OK")
