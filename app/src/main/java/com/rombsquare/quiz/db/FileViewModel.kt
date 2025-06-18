@@ -12,11 +12,11 @@ class FileViewModel(private val repository: FileRepository) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            refresh()
+            getAll()
         }
     }
 
-    fun refresh() {
+    fun getAll() {
         viewModelScope.launch {
             _files.value = repository.getAll()
         }
@@ -26,21 +26,21 @@ class FileViewModel(private val repository: FileRepository) : ViewModel() {
         viewModelScope.launch {
             val newFile = FileEntity(name = name)
             repository.insert(newFile)
-            refresh()
+            getAll()
         }
     }
 
     fun set(file: FileEntity) {
         viewModelScope.launch {
             repository.update(file)
-            refresh()
+            getAll()
         }
     }
 
     fun delete(file: FileEntity) {
         viewModelScope.launch {
             repository.delete(file)
-            refresh()
+            getAll()
         }
     }
 }

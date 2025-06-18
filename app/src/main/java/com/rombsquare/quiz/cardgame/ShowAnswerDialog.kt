@@ -1,6 +1,5 @@
 package com.rombsquare.quiz.cardgame
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -18,12 +17,7 @@ fun ShowAnswerDialog(
         title = {
             Text("Answer: $answer", fontSize = 20.sp)
         },
-        text = {
-            Column {
-                Text("Is your answer you think correct?")
-            }
-
-        },
+        text = { Text("Did you think about this answer?") },
         confirmButton = {
             Row {
                 TextButton(onClick = {onDismiss(1)}) { Text("Yes") }

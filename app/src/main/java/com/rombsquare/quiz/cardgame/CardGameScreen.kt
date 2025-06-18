@@ -46,6 +46,12 @@ fun CardGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int, na
 
     var showAnswerDialog by remember { mutableStateOf(false) }
 
+    // If cards haven't loaded yet
+    if (cards.size < 4) {
+        Text("Loading...")
+        return
+    }
+
     // End game condition
     if ((taskCount == -1 && lvl == cards.size) || (taskCount != -1 && lvl == taskCount)) {
         EndGameDialog(score, if(taskCount == -1) cards.size else taskCount) {

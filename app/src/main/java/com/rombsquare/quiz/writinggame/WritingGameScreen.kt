@@ -45,12 +45,7 @@ fun WritingGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int,
     var showAnswerDialog by remember { mutableStateOf(false) }
 
     if (cards.size < 4) {
-        Text("Only ${cards.size} cards! Loading...")
-        return;
-    }
-
-    if (cards[0].fileId != fileId) {
-        Text("Cards from other files found! Waiting for clearing it...")
+        Text("Loading...")
         return
     }
 

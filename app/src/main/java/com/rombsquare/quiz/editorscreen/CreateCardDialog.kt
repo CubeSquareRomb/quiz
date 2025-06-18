@@ -59,7 +59,7 @@ fun CreateCardDialog(
                 }
 
                 if (side1.length > 50 || side2.length > 25) {
-                    Toast.makeText(context, "Some of fields are too long", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Some fields are too long", Toast.LENGTH_SHORT).show()
                     return@TextButton
                 }
 

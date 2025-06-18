@@ -27,19 +27,19 @@ fun FileItem(file: FileEntity, onClick: () -> Unit) {
             .padding(vertical = 28.dp, horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = Icons.Default.Folder,
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-            tint = MaterialTheme.colorScheme.secondary
-        )
+            Icon(
+                imageVector = Icons.Default.Folder,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.secondary
+            )
 
-        Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
-        Text(
-            text = file.name,
-            style = MaterialTheme.typography.bodyLarge
-        )
+            Text(
+                text = file.name,
+                style = MaterialTheme.typography.bodyLarge
+            )
     }
 
 }

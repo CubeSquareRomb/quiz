@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.filescreen
+package com.rombsquare.quiz.editorscreen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column

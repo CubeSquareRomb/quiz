@@ -20,7 +20,4 @@ interface FileDao {
 
     @Delete
     suspend fun delete(file: FileEntity)
-
-    @Query("DELETE FROM files")
-    suspend fun deleteAll()
 }

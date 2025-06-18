@@ -2,13 +2,17 @@ package com.rombsquare.quiz.editorscreen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -25,7 +29,6 @@ import com.rombsquare.quiz.db.CardEntity
 import com.rombsquare.quiz.db.CardViewModel
 import com.rombsquare.quiz.db.FileEntity
 import com.rombsquare.quiz.db.FileViewModel
-import com.rombsquare.quiz.filescreen.PlusFab
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,8 +38,12 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
     var showCreateCardDialog by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
     var showRenameDialog by remember {mutableStateOf(false)}
+    var showPlayDialog by remember {mutableStateOf(false)}
+    var showPlaySettingsDialog by remember {mutableStateOf(false)}
+    var showDeleteDialog by remember {mutableStateOf(false)}
 
     var selectedCard by remember { mutableStateOf<CardEntity?>(null) }
+    var selectedMode by remember {mutableStateOf("")}
 
     Scaffold(
         topBar = {
@@ -51,8 +58,7 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
                 },
                 actions = {
                     IconButton(onClick = {
-                        fileViewModel.delete(FileEntity(fileId, ""))
-                        navController.navigate("main")
+                        showDeleteDialog = true
                     }) {
                         Icon(Icons.Default.Delete, contentDescription = "Delete")
                     }
@@ -66,8 +72,23 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
         },
 
         floatingActionButton = {
-            PlusFab {
-                showCreateCardDialog = true
+            FloatingActionButton(
+                shape = CircleShape,
+                onClick = {
+                    cardViewModel.getAll()
+                    if (cardViewModel.cards.value.filter { it.fileId == fileId }.size < 4) {
+                        Toast.makeText(context, "You need at least 4 cards", Toast.LENGTH_SHORT).show()
+                        return@FloatingActionButton
+                    }
+                    showPlayDialog = true
+                },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = "Play",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                )
             }
         }
     ) { paddingValues ->
@@ -78,6 +99,9 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
             onCardClick = {
                 selectedCard = it
                 showEditDialog = true
+            },
+            onAddClick = {
+                showCreateCardDialog = true
             }
         )
 
@@ -85,6 +109,10 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
             CreateCardDialog(
                 onDismiss = {showCreateCardDialog = false}
             ) { side1, side2 ->
+                if ((cardViewModel.cards.value.filter {it.fileId == fileId}.map {it.side2}).contains(side2.trim())) {
+                    Toast.makeText(context, "2 cards can't have the same answer", Toast.LENGTH_SHORT).show()
+                    return@CreateCardDialog
+                }
                 cardViewModel.insert(CardEntity(
                     side1 = side1,
                     side2 = side2,
@@ -107,6 +135,11 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
                     showEditDialog = false
                 },
                 onConfirm = { fixedOptions, side1, side2, incorrectOption1, incorrectOption2, incorrectOption3 ->
+                    if ((cardViewModel.cards.value.filter {it.fileId == fileId}.map {it.side2}).contains(side2.trim()) &&
+                        selectedCard!!.side2 != side2) {
+                        Toast.makeText(context, "2 cards can't have the same answer", Toast.LENGTH_SHORT).show()
+                        return@EditCardDialog
+                    }
                     cardViewModel.set(CardEntity(
                         id = selectedCard!!.id,
                         side1 = side1,
@@ -128,7 +161,7 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
                 label = "New name",
                 onConfirm = {
                     if (it.isEmpty()) {
-                        Toast.makeText(context, "Enter a new file name", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Enter a new quiz name", Toast.LENGTH_SHORT).show()
                         return@InputDialog
                     }
 
@@ -140,6 +173,42 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
                 },
                 onDismiss = {
                     showRenameDialog = false
+                }
+            )
+        }
+
+        if (showPlayDialog) {
+            PlayDialog(
+                onDismiss = {
+                    showPlayDialog = false
+                },
+                onPlay = {
+                    selectedMode = it
+                    showPlayDialog = false
+                    showPlaySettingsDialog = true
+                }
+            )
+        }
+
+        if (showPlaySettingsDialog) {
+            PlaySettingsDialog(
+                onChooseAllCards = {
+                    navController.navigate("$selectedMode/$fileId/-1")
+                },
+                onConfirm = {
+                    navController.navigate("$selectedMode/$fileId/$it")
+                }
+            )
+        }
+
+        if (showDeleteDialog) {
+            DeleteDialog(
+                onConfirm = {
+                    fileViewModel.delete(FileEntity(fileId, ""))
+                    navController.navigate("main")
+                },
+                onDismiss = {
+                    showDeleteDialog = false
                 }
             )
         }

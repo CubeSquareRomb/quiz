@@ -3,6 +3,7 @@ package com.rombsquare.quiz.db
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
+@Suppress("UNCHECKED_CAST")
 class FileViewModelFactory(
     private val repository: FileRepository
 ) : ViewModelProvider.Factory {

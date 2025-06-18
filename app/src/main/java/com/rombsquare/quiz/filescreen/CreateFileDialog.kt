@@ -21,7 +21,7 @@ fun CreateFileDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Create File") },
+        title = { Text("Create Quiz") },
         text = {
             Column {
                 OutlinedTextField(
