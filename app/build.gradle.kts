@@ -63,6 +63,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation("androidx.navigation:navigation-compose:2.9.0")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation("androidx.compose.ui:ui:1.8.2")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.33.0-alpha")
+
 
 //    implementation("com.google.dagger:hilt-android:2.51")
 //    kapt("com.google.dagger:hilt-compiler:2.51")

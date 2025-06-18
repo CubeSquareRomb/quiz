@@ -5,9 +5,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rombsquare.quiz.db.CardRepository
 import com.rombsquare.quiz.db.CardViewModel
 import com.rombsquare.quiz.db.CardViewModelFactory
@@ -36,8 +39,18 @@ class MainActivity : ComponentActivity() {
                 factory = CardViewModelFactory(cardRepo)
             )
 
+            QuizTheme(darkTheme = true) {
+                val systemUiController = rememberSystemUiController()
+                val useDarkIcons = false
+                val backgroundColor = MaterialTheme.colorScheme.background
 
-            QuizTheme {
+                SideEffect {
+                    systemUiController.setSystemBarsColor(
+                        color = backgroundColor,
+                        darkIcons = useDarkIcons
+                    )
+                }
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { it ->
                     NavApp(fileViewModel, cardViewModel)
                 }
