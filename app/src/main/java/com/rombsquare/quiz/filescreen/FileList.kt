@@ -50,15 +50,19 @@ fun FileList(
     LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
-                .padding(horizontal = 8.dp, vertical = 12.dp)
+                .padding(8.dp)
     ) {
+            item {
+                HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha=0.5f))
+            }
+
             itemsIndexed(files) { index, file ->
                 FileItem(file/*, cardCounts.getOrNull(index) ?: 0*/) {
                     onFileClick(file)
                 }
 
                 HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha=0.5f))
+
         }
 
     }
