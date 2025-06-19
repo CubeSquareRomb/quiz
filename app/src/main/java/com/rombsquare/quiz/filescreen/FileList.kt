@@ -52,16 +52,15 @@ fun FileList(
                 .fillMaxSize()
                 .padding(8.dp)
     ) {
-            item {
-                HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha=0.5f))
-            }
 
             itemsIndexed(files) { index, file ->
                 FileItem(file/*, cardCounts.getOrNull(index) ?: 0*/) {
                     onFileClick(file)
                 }
 
-                HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha=0.5f))
+                if (index != files.lastIndex) {
+                    HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha=0.5f))
+                }
 
         }
 
