@@ -31,7 +31,9 @@ fun PlaySettingsDialog(
                 OutlinedTextField(
                     value = taskCountString,
                     onValueChange = {
-                        taskCountString = it
+                        if (it.matches(Regex("\\d*"))) {
+                            taskCountString = it
+                        }
                     },
                     label = { Text("Task Count") },
                     keyboardOptions = KeyboardOptions.Default.copy(
