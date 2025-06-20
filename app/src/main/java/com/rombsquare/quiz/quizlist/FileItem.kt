@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.filescreen
+package com.rombsquare.quiz.quizlist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

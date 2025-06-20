@@ -9,8 +9,8 @@ import androidx.navigation.navArgument
 import com.rombsquare.quiz.game.cardgame.CardGameScreen
 import com.rombsquare.quiz.db.CardViewModel
 import com.rombsquare.quiz.db.FileViewModel
-import com.rombsquare.quiz.editorscreen.EditorScreen
-import com.rombsquare.quiz.filescreen.FileScreen
+import com.rombsquare.quiz.editor.EditorScreen
+import com.rombsquare.quiz.quizlist.FileScreen
 import com.rombsquare.quiz.game.optiongame.OptionGameScreen
 import com.rombsquare.quiz.game.truefalsegame.TrueFalseGameScreen
 import com.rombsquare.quiz.game.writinggame.WritingGameScreen

@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.editorscreen
+package com.rombsquare.quiz.editor
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues

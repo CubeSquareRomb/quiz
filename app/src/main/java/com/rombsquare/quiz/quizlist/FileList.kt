@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.filescreen
+package com.rombsquare.quiz.quizlist
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box

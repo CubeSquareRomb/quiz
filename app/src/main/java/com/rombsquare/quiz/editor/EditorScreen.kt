@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.editorscreen
+package com.rombsquare.quiz.editor
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.rombsquare.quiz.InputDialog
 import com.rombsquare.quiz.db.CardEntity
 import com.rombsquare.quiz.db.CardViewModel
 import com.rombsquare.quiz.db.FileEntity
@@ -156,13 +155,11 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
         }
 
         if (showRenameDialog) {
-            InputDialog(
-                title = "Rename",
-                label = "New name",
+            RenameDialog(
                 onConfirm = {
                     if (it.isEmpty()) {
                         Toast.makeText(context, "Enter a new quiz name", Toast.LENGTH_SHORT).show()
-                        return@InputDialog
+                        return@RenameDialog
                     }
 
                     fileViewModel.set(FileEntity(

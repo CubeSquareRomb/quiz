@@ -1,4 +1,4 @@
-package com.rombsquare.quiz
+package com.rombsquare.quiz.editor
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
@@ -11,11 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
-// Basic dialog with 1 input
 @Composable
-fun InputDialog(
-    title: String,
-    label: String,
+fun RenameDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
@@ -23,13 +20,13 @@ fun InputDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title) },
+        title = { Text("Rename") },
         text = {
             Column {
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    label = { Text(label) }
+                    label = { Text("New name") }
                 )
             }
         },

@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.editorscreen
+package com.rombsquare.quiz.editor
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
