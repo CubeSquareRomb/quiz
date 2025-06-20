@@ -32,18 +32,24 @@ class GameViewModel(
         reset()
     }
 
-    fun next(userAnswer: Int) {
+    fun next(userAnswer: Int): Boolean {
+        var isCorrect = false
+
         if (userAnswer == _correctOption.value) {
             _score.value++
+            isCorrect = true
+        } else {
+            isCorrect = false
         }
 
         _lvl.value++
 
         if (_lvl.value >= cards.value.size) {
-            return
+            return false
         }
 
         update()
+        return isCorrect
     }
 
     fun update() {

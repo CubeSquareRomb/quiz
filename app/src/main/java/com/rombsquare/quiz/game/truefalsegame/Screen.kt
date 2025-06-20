@@ -23,24 +23,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.rombsquare.quiz.PrefManager
+import com.rombsquare.quiz.PrefViewModel
+import com.rombsquare.quiz.PrefViewModelFactory
 import com.rombsquare.quiz.db.CardViewModel
-import com.rombsquare.quiz.game.optiongame.EndGameDialog
+import com.rombsquare.quiz.game.AnswerDialog
+import com.rombsquare.quiz.game.EndGameDialog
 
 @Composable
 fun TrueFalseGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int, navController: NavController) {
     // Get gameViewModel - the logic of the game
     val factory = remember { GameViewModelFactory(fileId, cardViewModel) }
     val gameViewModel: GameViewModel = viewModel(factory = factory)
+
+    val context = LocalContext.current
+    val prefViewModel: PrefViewModel = viewModel(factory = PrefViewModelFactory(PrefManager(context)))
 
     // Reset gameViewModel
     LaunchedEffect(Unit) {
@@ -52,6 +62,10 @@ fun TrueFalseGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: In
     val cards by gameViewModel.cards.collectAsState()
     val score by gameViewModel.score.collectAsState()
     val hypotheticalAnswer by gameViewModel.hypotheticalAnswer.collectAsState()
+    val showAnswer by prefViewModel.showAnswer.collectAsState()
+
+    var showAnswerDialog by remember { mutableStateOf(false) }
+    var wasCorrect by remember { mutableStateOf(false) }
 
     // If cards haven't loaded yet
     if (cards.size < 4) {
@@ -118,7 +132,8 @@ fun TrueFalseGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: In
                         .width(120.dp)
                     ,
                     onClick = {
-                        gameViewModel.next(true)
+                        wasCorrect = gameViewModel.next(true)
+                        showAnswerDialog = true
                     },
                     shape = RoundedCornerShape(10),
                 ) {
@@ -140,7 +155,8 @@ fun TrueFalseGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: In
                         containerColor = Color(255, 138, 128, 255),
                     ),
                     onClick = {
-                        gameViewModel.next(false)
+                        wasCorrect = gameViewModel.next(false)
+                        showAnswerDialog = true
                     },
                     shape = RoundedCornerShape(10),
                 ) {
@@ -153,7 +169,14 @@ fun TrueFalseGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: In
                 }
             }
         }
+    }
 
-
+    if (showAnswerDialog && showAnswer) {
+        AnswerDialog(
+            answer = if (wasCorrect) "Yes" else "No",
+            isCorrect = wasCorrect
+        ) {
+            showAnswerDialog = false
+        }
     }
 }

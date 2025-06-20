@@ -4,10 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.LibraryAddCheck
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,6 +31,7 @@ import com.rombsquare.quiz.db.FileViewModel
 @Composable
 fun FileScreen(cardViewModel: CardViewModel, fileViewModel: FileViewModel, navController: NavController) {
     var showCreateFileDialog by remember { mutableStateOf(false) }
+    var showSettingsDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         cardViewModel.getAll()
@@ -45,6 +49,13 @@ fun FileScreen(cardViewModel: CardViewModel, fileViewModel: FileViewModel, navCo
                         modifier = Modifier.padding(start = 12.dp, end = 8.dp)
                     )
                 },
+                actions = {
+                    IconButton(onClick = {
+                        showSettingsDialog = true
+                    }) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -72,6 +83,12 @@ fun FileScreen(cardViewModel: CardViewModel, fileViewModel: FileViewModel, navCo
     if (showCreateFileDialog) {
         CreateFileDialog(fileViewModel) {
             showCreateFileDialog = false
+        }
+    }
+
+    if (showSettingsDialog) {
+        SettingsDialog {
+            showSettingsDialog = false
         }
     }
 

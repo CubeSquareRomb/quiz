@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.rombsquare.quiz.db.CardViewModel
-import com.rombsquare.quiz.game.optiongame.EndGameDialog
+import com.rombsquare.quiz.game.EndGameDialog
 
 @Composable
 fun CardGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int, navController: NavController) {

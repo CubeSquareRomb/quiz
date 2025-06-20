@@ -58,8 +58,9 @@ class GameViewModel(
         }
     }
 
-    fun next(userAnswer: Boolean) {
-        if (userAnswer == _answer.value) {
+    fun next(userAnswer: Boolean): Boolean {
+        val isCorrect = userAnswer == _answer.value
+        if (isCorrect) {
             _score.value++
         }
 
@@ -68,6 +69,8 @@ class GameViewModel(
         if (_lvl.value < _cards.value.size) {
             update()
         }
+
+        return isCorrect
     }
 
     fun reset() {

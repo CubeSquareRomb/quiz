@@ -28,12 +28,15 @@ class GameViewModel(
         reset()
     }
 
-    fun next(userAnswer: String) {
-        if (userAnswer == _cards.value[_lvl.value].side2) {
+    fun next(userAnswer: String): Boolean {
+        var isCorrect = userAnswer == _cards.value[_lvl.value].side2
+        if (isCorrect) {
             _score.value++
         }
 
         _lvl.value++
+
+        return isCorrect
     }
 
     fun reset() {

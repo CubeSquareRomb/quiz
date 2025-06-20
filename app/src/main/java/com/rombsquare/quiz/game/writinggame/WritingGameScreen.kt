@@ -12,21 +12,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.rombsquare.quiz.PrefManager
+import com.rombsquare.quiz.PrefViewModel
+import com.rombsquare.quiz.PrefViewModelFactory
 import com.rombsquare.quiz.db.CardViewModel
-import com.rombsquare.quiz.game.optiongame.EndGameDialog
+import com.rombsquare.quiz.game.AnswerDialog
+import com.rombsquare.quiz.game.EndGameDialog
 
 @Composable
 fun WritingGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int, navController: NavController) {
     val factory = remember { GameViewModelFactory(fileId, cardViewModel) }
     val gameViewModel: GameViewModel = viewModel(factory = factory)
+
+    val context = LocalContext.current
+    val prefViewModel: PrefViewModel = viewModel(factory = PrefViewModelFactory(PrefManager(context)))
 
     LaunchedEffect(Unit) {
         gameViewModel.reset()
@@ -35,6 +45,10 @@ fun WritingGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int,
     val lvl by gameViewModel.lvl.collectAsState()
     val cards by gameViewModel.cards.collectAsState()
     val score by gameViewModel.score.collectAsState()
+    val showAnswer by prefViewModel.showAnswer.collectAsState()
+
+    var showAnswerDialog by remember { mutableStateOf(false) }
+    var wasCorrect by remember { mutableStateOf(false) }
 
     if (cards.size < 4) {
         Text("Loading...")
@@ -79,7 +93,17 @@ fun WritingGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int,
 
         Spacer(modifier = Modifier.weight(1f))
         AnswerInput {
-            gameViewModel.next(it)
+            wasCorrect = gameViewModel.next(it)
+            showAnswerDialog = true
+        }
+    }
+
+    if (showAnswerDialog && showAnswer) {
+        AnswerDialog(
+            answer = cards[lvl-1].side2,
+            isCorrect = wasCorrect
+        ) {
+            showAnswerDialog = false
         }
     }
 }
