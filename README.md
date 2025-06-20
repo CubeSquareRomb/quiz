@@ -1,4 +1,4 @@
-## Powerful tool for self-studying
+## The powerful tool for self-studying
 
 This app can help you memorize any kind of topic. The unit of the information is represented as a flashcard, which contains just a question and an answer. For example, if you want to learn historical dates, just create multiple cards for each date, like _"What's the year of the independence of the USA? - 1776"_. Even during the process of making cards, you're studying. Then, you can play one of the four modes:
 
