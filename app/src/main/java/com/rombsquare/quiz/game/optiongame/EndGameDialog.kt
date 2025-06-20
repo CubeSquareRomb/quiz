@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.optiongame
+package com.rombsquare.quiz.game.optiongame
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button

@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.optiongame
+package com.rombsquare.quiz.game.optiongame
 
 // Generates options by task count, option count and current task index
 // Returns a list of task indices as options, and correct option index inside option list

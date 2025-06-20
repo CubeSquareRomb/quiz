@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.cardgame
+package com.rombsquare.quiz.game.cardgame
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,14 +24,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.rombsquare.quiz.db.CardViewModel
-import com.rombsquare.quiz.optiongame.EndGameDialog
-import com.rombsquare.quiz.GameViewModel
-import com.rombsquare.quiz.GameViewModelFactory
+import com.rombsquare.quiz.game.optiongame.EndGameDialog
 
 @Composable
 fun CardGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int, navController: NavController) {
     // Get gameViewModel - the logic of the game
-    val factory = remember { GameViewModelFactory(fileId, "cards", cardViewModel) }
+    val factory = remember { GameViewModelFactory(fileId, cardViewModel) }
     val gameViewModel: GameViewModel = viewModel(factory = factory)
 
     // Reset gameViewModel

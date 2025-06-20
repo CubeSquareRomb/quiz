@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.cardgame
+package com.rombsquare.quiz.game.cardgame
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog

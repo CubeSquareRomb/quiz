@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.truefalsegame
+package com.rombsquare.quiz.game.writinggame
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-// Game view model for the True/False mode
+// Game logic for all 3 modes
 class GameViewModel(
     val cardViewModel: CardViewModel,
     val fileId: Int,
@@ -21,15 +21,6 @@ class GameViewModel(
     private var _score = MutableStateFlow(0)
     val score: StateFlow<Int> = _score
 
-    private var _answer = MutableStateFlow(false)
-    val answer: StateFlow<Boolean> = _answer
-
-    private var _hypotheticalAnswer = MutableStateFlow("")
-    val hypotheticalAnswer: StateFlow<String> = _hypotheticalAnswer
-
-    private var _card = MutableStateFlow(CardEntity(0, "", "", fileId))
-    val card: StateFlow<CardEntity> = _card
-
     private var _cards = MutableStateFlow<List<CardEntity>>(emptyList())
     val cards: StateFlow<List<CardEntity>> = _cards
 
@@ -37,37 +28,12 @@ class GameViewModel(
         reset()
     }
 
-    fun update() {
-        _answer.value = (0..1).random() == 1
-
-        _card.value = _cards.value[_lvl.value]
-        if (_answer.value) {
-            _hypotheticalAnswer.value = _card.value.side2
-            return
-        }
-
-        if (_card.value.fixedOptions) {
-            if (_answer.value) {
-                _hypotheticalAnswer.value = _card.value.side2
-            } else {
-                _hypotheticalAnswer.value = listOf(_card.value.incorrectOption1, _card.value.incorrectOption2, _card.value.incorrectOption3).random()
-            }
-        } else {
-            val incorrectAnswers = _cards.value.map {it.side2}.filter {it != _card.value.side2}
-            _hypotheticalAnswer.value = incorrectAnswers.random()
-        }
-    }
-
-    fun next(userAnswer: Boolean) {
-        if (userAnswer == _answer.value) {
+    fun next(userAnswer: String) {
+        if (userAnswer == _cards.value[_lvl.value].side2) {
             _score.value++
         }
 
         _lvl.value++
-
-        if (_lvl.value < _cards.value.size) {
-            update()
-        }
     }
 
     fun reset() {
@@ -75,15 +41,14 @@ class GameViewModel(
             cardViewModel.clear()
             _cards.value = emptyList()
             cardViewModel.getByFileId(fileId)
+            _lvl.value = 0
+            _score.value = 0
             cardViewModel.cards.collect { newCards ->
                 if (newCards.isEmpty()) {
                     return@collect
                 }
 
                 _cards.value = newCards.shuffled()
-                _lvl.value = 0
-
-                update()
 
                 this.cancel()
             }

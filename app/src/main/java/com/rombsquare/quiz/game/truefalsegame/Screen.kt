@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.truefalsegame
+package com.rombsquare.quiz.game.truefalsegame
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.rombsquare.quiz.db.CardViewModel
-import com.rombsquare.quiz.optiongame.EndGameDialog
+import com.rombsquare.quiz.game.optiongame.EndGameDialog
 
 @Composable
 fun TrueFalseGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int, navController: NavController) {

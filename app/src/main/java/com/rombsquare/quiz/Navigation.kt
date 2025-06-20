@@ -6,14 +6,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.rombsquare.quiz.cardgame.CardGameScreen
+import com.rombsquare.quiz.game.cardgame.CardGameScreen
 import com.rombsquare.quiz.db.CardViewModel
 import com.rombsquare.quiz.db.FileViewModel
 import com.rombsquare.quiz.editorscreen.EditorScreen
 import com.rombsquare.quiz.filescreen.FileScreen
-import com.rombsquare.quiz.optiongame.OptionGameScreen
-import com.rombsquare.quiz.truefalsegame.TrueFalseGameScreen
-import com.rombsquare.quiz.writinggame.WritingGameScreen
+import com.rombsquare.quiz.game.optiongame.OptionGameScreen
+import com.rombsquare.quiz.game.truefalsegame.TrueFalseGameScreen
+import com.rombsquare.quiz.game.writinggame.WritingGameScreen
 
 @Composable
 fun NavApp(fileViewModel: FileViewModel, cardViewModel: CardViewModel) {

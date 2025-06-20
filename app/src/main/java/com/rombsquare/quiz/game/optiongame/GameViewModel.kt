@@ -1,21 +1,18 @@
-package com.rombsquare.quiz
+package com.rombsquare.quiz.game.optiongame
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.rombsquare.quiz.db.CardEntity
 import com.rombsquare.quiz.db.CardViewModel
-import com.rombsquare.quiz.optiongame.generateOptions
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-// Game logic for all 3 modes
 class GameViewModel(
     val cardViewModel: CardViewModel,
     val fileId: Int,
-    val mode: String
 ) : ViewModel() {
     private var _lvl = MutableStateFlow(0)
     val lvl: StateFlow<Int> = _lvl
@@ -36,12 +33,8 @@ class GameViewModel(
     }
 
     fun next(userAnswer: Int) {
-        if (mode == "options") {
-            if (userAnswer == _correctOption.value) {
-                _score.value++
-            }
-        } else if (mode == "cards") {
-            _score.value += userAnswer
+        if (userAnswer == _correctOption.value) {
+            _score.value++
         }
 
         _lvl.value++
@@ -50,10 +43,10 @@ class GameViewModel(
             return
         }
 
-        if (mode != "options") {
-            return
-        }
+        update()
+    }
 
+    fun update() {
         val currentCard = _cards.value[_lvl.value]
         if (currentCard.fixedOptions) {
             _optionIndices.value = mutableListOf<Int>(0, 1, 2, 3).shuffled()
@@ -71,15 +64,6 @@ class GameViewModel(
         }
     }
 
-    // NEXT method for writing mode
-    fun next(userAnswer: String) {
-        if (userAnswer == _cards.value[_lvl.value].side2) {
-            _score.value++
-        }
-
-        _lvl.value++
-    }
-
     fun reset() {
         viewModelScope.launch {
             cardViewModel.clear()
@@ -93,20 +77,7 @@ class GameViewModel(
                 _cards.value = newCards.shuffled()
                 _lvl.value = 0
 
-                val currentCard = _cards.value[0]
-                if (currentCard.fixedOptions) {
-                    _optionIndices.value = mutableListOf<Int>(0, 1, 2, 3).shuffled()
-                    _correctOption.value = _optionIndices.value.indexOf(0)
-                    return@collect
-                }
-                val optionOutput = generateOptions(
-                    _cards.value.size,
-                    4,
-                    0,
-                    _cards.value.mapIndexedNotNull { index, value -> if (value.fixedOptions) index else null }
-                )
-                _optionIndices.value = optionOutput.first
-                _correctOption.value = optionOutput.second
+                update()
 
                 this.cancel()
             }
@@ -117,13 +88,12 @@ class GameViewModel(
 @Suppress("UNCHECKED_CAST")
 class GameViewModelFactory(
     private val fileId: Int,
-    private val mode: String,
     private val cardViewModel: CardViewModel,
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
-            return GameViewModel(cardViewModel, fileId, mode) as T
+            return GameViewModel(cardViewModel, fileId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

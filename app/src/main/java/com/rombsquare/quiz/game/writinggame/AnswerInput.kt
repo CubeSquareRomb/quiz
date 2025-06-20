@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.writinggame
+package com.rombsquare.quiz.game.writinggame
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row

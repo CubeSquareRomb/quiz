@@ -1,4 +1,4 @@
-package com.rombsquare.quiz.optiongame
+package com.rombsquare.quiz.game.optiongame
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -31,13 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.rombsquare.quiz.GameViewModel
-import com.rombsquare.quiz.GameViewModelFactory
 import com.rombsquare.quiz.db.CardViewModel
 
 @Composable
 fun OptionGameScreen(cardViewModel: CardViewModel, fileId: Int, taskCount: Int, navController: NavController) {
-    val factory = remember { GameViewModelFactory(fileId, "options", cardViewModel) }
+    val factory = remember { GameViewModelFactory(fileId, cardViewModel) }
     val gameViewModel: GameViewModel = viewModel(factory = factory)
 
     LaunchedEffect(Unit) {
