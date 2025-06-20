@@ -19,6 +19,7 @@ fun PlayDialog(
                 TextButton(onClick = {onPlay("card-game")}) { Text("Training mode") }
                 TextButton(onClick = {onPlay("option-game")}) { Text("Option mode") }
                 TextButton(onClick = {onPlay("writing-game")}) { Text("Writing mode") }
+                TextButton(onClick = {onPlay("true-false-game")}) { Text("True/False mode") }
             }
         },
         confirmButton = {},

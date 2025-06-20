@@ -12,6 +12,7 @@ import com.rombsquare.quiz.db.FileViewModel
 import com.rombsquare.quiz.editorscreen.EditorScreen
 import com.rombsquare.quiz.filescreen.FileScreen
 import com.rombsquare.quiz.optiongame.OptionGameScreen
+import com.rombsquare.quiz.truefalsegame.TrueFalseGameScreen
 import com.rombsquare.quiz.writinggame.WritingGameScreen
 
 @Composable
@@ -67,6 +68,19 @@ fun NavApp(fileViewModel: FileViewModel, cardViewModel: CardViewModel) {
             val taskCount = backStackEntry.arguments?.getInt("taskCount") ?: -1
 
             WritingGameScreen(cardViewModel, fileId, taskCount, navController)
+        }
+
+        composable(
+            "true-false-game/{fileId}/{taskCount}",
+            arguments = listOf(
+                navArgument("fileId") { type = NavType.IntType },
+                navArgument("taskCount") { type = NavType.IntType },
+            )
+        ) { backStackEntry ->
+            val fileId = backStackEntry.arguments?.getInt("fileId") ?: 0
+            val taskCount = backStackEntry.arguments?.getInt("taskCount") ?: -1
+
+            TrueFalseGameScreen(cardViewModel, fileId, taskCount, navController)
         }
     }
 }
