@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.rombsquare.quiz.db.FileEntity
 
@@ -28,10 +30,10 @@ fun FileItem(file: FileEntity, onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
             Icon(
-                imageVector = Icons.Default.Folder,
+                imageVector = if(file.isFav) Icons.Default.Favorite else Icons.Default.Folder,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.secondary
+                tint = if(file.isFav) Color(0xFFFF8A80) else MaterialTheme.colorScheme.secondary
             )
 
             Spacer(modifier = Modifier.width(12.dp))

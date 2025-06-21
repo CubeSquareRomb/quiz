@@ -17,6 +17,7 @@ import com.rombsquare.quiz.db.FileViewModel
 @Composable
 fun CreateFileDialog(
     fileViewModel: FileViewModel,
+    onAccept: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
@@ -41,8 +42,7 @@ fun CreateFileDialog(
                     return@TextButton
                 }
 
-                fileViewModel.insert(name)
-                onDismiss()
+                onAccept(name)
             }) {
                 Text("OK")
             }

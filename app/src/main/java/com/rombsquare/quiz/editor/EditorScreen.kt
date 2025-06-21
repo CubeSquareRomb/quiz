@@ -7,7 +7,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -17,9 +20,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,6 +33,7 @@ import com.rombsquare.quiz.db.CardEntity
 import com.rombsquare.quiz.db.CardViewModel
 import com.rombsquare.quiz.db.FileEntity
 import com.rombsquare.quiz.db.FileViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,9 +46,15 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
     var showPlayDialog by remember {mutableStateOf(false)}
     var showPlaySettingsDialog by remember {mutableStateOf(false)}
     var showDeleteDialog by remember {mutableStateOf(false)}
+    var showTagDialog by remember {mutableStateOf(false)}
 
     var selectedCard by remember { mutableStateOf<CardEntity?>(null) }
     var selectedMode by remember {mutableStateOf("")}
+
+    val files by fileViewModel.files.collectAsState()
+    val file = files.find {it.id == fileId} ?: return
+
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -57,14 +69,30 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
                 },
                 actions = {
                     IconButton(onClick = {
+                        showTagDialog = true
+                    }) {
+                        Icon(Icons.Default.Tag, contentDescription = "Tags")
+                    }
+
+                    IconButton(onClick = {
                         showDeleteDialog = true
                     }) {
                         Icon(Icons.Default.Delete, contentDescription = "Delete")
                     }
+
                     IconButton(onClick = {
                         showRenameDialog = true
                     }) {
                         Icon(Icons.Default.Edit, contentDescription = "Edit")
+                    }
+
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            fileViewModel.set(file.copy(isFav = !file.isFav))
+                            fileViewModel.getAllNonTrashed()
+                        }
+                    }) {
+                        Icon(if(file.isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Favorite")
                     }
                 }
             )
@@ -154,6 +182,7 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
             )
         }
 
+        val coroutineScope = rememberCoroutineScope()
         if (showRenameDialog) {
             RenameDialog(
                 onConfirm = {
@@ -162,10 +191,13 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
                         return@RenameDialog
                     }
 
-                    fileViewModel.set(FileEntity(
-                        id = fileId,
-                        name = it
-                    ))
+                    coroutineScope.launch {
+                        fileViewModel.set(FileEntity(
+                            id = fileId,
+                            name = it
+                        ))
+                    }
+
                     showRenameDialog = false
                 },
                 onDismiss = {
@@ -201,11 +233,42 @@ fun EditorScreen(navController: NavController, fileId: Int, cardViewModel: CardV
         if (showDeleteDialog) {
             DeleteDialog(
                 onConfirm = {
-                    fileViewModel.delete(FileEntity(fileId, ""))
+                    coroutineScope.launch {
+                        fileViewModel.set(FileEntity(
+                            id = file.id,
+                            name = file.name,
+                            tags = file.tags,
+                            isFav = file.isFav,
+                            isTrashed = true
+                        ))
+                    }
+
+                    //fileViewModel.delete(FileEntity(fileId, ""))
                     navController.navigate("main")
                 },
                 onDismiss = {
                     showDeleteDialog = false
+                }
+            )
+        }
+
+        if (showTagDialog) {
+            TagDialog(
+                file = file,
+                onConfirm = {
+                    coroutineScope.launch {
+                        fileViewModel.set(FileEntity(
+                            file.id,
+                            file.name,
+                            it,
+                            file.isFav,
+                            file.isTrashed
+                        ))
+                    }
+                    showTagDialog = false
+                },
+                onDismiss = {
+                    showTagDialog = false
                 }
             )
         }

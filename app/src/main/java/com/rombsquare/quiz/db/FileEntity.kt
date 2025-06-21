@@ -6,5 +6,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "files")
 data class FileEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String
+    val name: String = "<empty>",
+    val tags: String = "",
+    val isFav: Boolean = false,
+    val isTrashed: Boolean = false
 )

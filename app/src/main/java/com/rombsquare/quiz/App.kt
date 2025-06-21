@@ -3,6 +3,8 @@ package com.rombsquare.quiz
 import android.app.Application
 import androidx.core.content.edit
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.rombsquare.quiz.db.CardEntity
 import com.rombsquare.quiz.db.FileEntity
 import com.rombsquare.quiz.db.QuizDatabase
@@ -20,11 +22,20 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        val migration2to3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE FileEntity ADD COLUMN tags TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE FileEntity ADD COLUMN isFav INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE FileEntity ADD COLUMN isTrashed INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         database = Room.databaseBuilder(
             applicationContext,
             QuizDatabase::class.java,
             "quiz_db"
         )
+        .addMigrations(migration2to3)
         .build()
 
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
@@ -34,7 +45,7 @@ class App : Application() {
             appScope.launch {
                 val fileDao = database.fileDao()
                 val file = FileEntity(
-                    name = "Example Quiz"
+                    name = "Example Quiz",
                 )
                 val fileId = fileDao.insert(file).toInt()
 

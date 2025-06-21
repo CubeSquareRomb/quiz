@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [CardEntity::class, FileEntity::class],
-    version = 2
+    version = 3
 )
 abstract class QuizDatabase : RoomDatabase() {
     abstract fun cardDao(): CardDao
